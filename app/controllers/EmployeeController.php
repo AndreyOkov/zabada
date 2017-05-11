@@ -68,9 +68,7 @@ class EmployeeController extends AppController
         if ( !empty($_POST) ) {
             $values = $_POST["formData"];
             $rules = [
-                "firstname" => "required",
-                "lastname"  => "required",
-                "salary"    => "required|positive"
+                "email" => "required|isEmail"
             ];
             $result = $this->validate($values, $rules);
             echo json_encode($result);
@@ -106,6 +104,10 @@ class EmployeeController extends AppController
                                     $errors[$formKey][] = $formKey . " must be a number biger than 0";
                                 }
                                 break;
+                            case 'isEmail':
+                                if(!filter_var($values[$formKey], FILTER_VALIDATE_EMAIL)){
+                                    $errors[$formKey][] = $formKey. " incorrect email";
+                                }
                         }
                     }
                 }

@@ -15,7 +15,8 @@ class Employees extends Model
                       em.id AS em_id, 
                       CONCAT_WS(' ', em.firstname, em.lastname, em.patronymic) AS fio,
                       em.gender, 
-                      em.salary, 
+                      em.salary,
+                      em.email,
                           (SELECT 
                                 GROUP_CONCAT( dp.name ) AS deps
                           FROM 
@@ -31,12 +32,13 @@ class Employees extends Model
     public function applyCreateEmployee()
     {
         if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['departments'])) {
-            $sql = $this->pdo->executeWithParams('INSERT INTO  employee(firstname, lastname, patronymic, gender, salary) VALUES (?, ?, ?, ?, ?)',
+            $sql = $this->pdo->executeWithParams('INSERT INTO  employee(firstname, lastname, patronymic, gender, salary,email) VALUES (?, ?, ?, ?, ?, ?)',
                 [$_POST['firstname'],
                     $_POST['lastname'],
                     $_POST['patronymic'],
                     $_POST['gender'],
-                    $_POST['salary']]);
+                    $_POST['salary'],
+                    $_POST['email']]);
             $employee_id = $this->pdo->getLastId();
             $this->pdo->executeWithParams("DELETE  FROM employee_department WHERE id_employee = ?", [$employee_id]);
             foreach ($_POST['departments'] as $idDepartment) {
@@ -90,7 +92,7 @@ class Employees extends Model
             $this->pdo->executeWithParams("DELETE  FROM employee_department WHERE id_employee = ?", [$id]);
 
             $sql = "UPDATE  employee
-                    SET  firstname = ?, lastname = ?, patronymic = ?, gender = ?, salary = ? WHERE id= ?";
+                    SET  firstname = ?, lastname = ?, patronymic = ?, gender = ?, salary = ?, email = ? WHERE id= ?";
 
             $flag = $this->pdo->executeWithParams($sql,
                 [$_POST['firstname'],
@@ -98,6 +100,7 @@ class Employees extends Model
                     $_POST['patronymic'],
                     $_POST['gender'],
                     $_POST['salary'],
+                    $_POST['email'],
                     $id]);
 
             // добавляем указанные отделы сотруднику

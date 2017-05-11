@@ -42,6 +42,13 @@
             <div class="error-container"></div>
         </div>
     </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="email">E-mail:</label>
+        <div class="col-sm-10">
+            <input id="" type="email" name="email" value="<?= field($formData, 'email') ?>"/>
+            <div class="error-container"></div>
+        </div>
+    </div>
         <input type="hidden" name="id" value="<?=field($formData, 'id')?> "/>
 
     <div class="form-group">
@@ -56,16 +63,31 @@
 </form>
 
 <script>
+    var rules = {
+        "firstname" : "required",
+        "lastname"  : "required",
+        "salary"    : "required|positive"
+    };
+
+
      $("input[type='submit']").on("click",function (e) {
          e.preventDefault();
          var form = $("#myForm");
          var formData = formDataToArray(form);
-         $.post("/employee/ajax", {formData :formData}, function(data){
-             if(data[0] === false){
-                 handleAjax(data, form, '.error-container');
-             } else {
-                 form.submit();
-             }
-    },"json");
+         var resultClient = validateOnClient(formData, rules);
+         if(resultClient[0] === true){
+             $.post("/employee/ajax", {formData :formData}, function(resultServer){
+                 if(resultServer[0] === false){
+                     handleAjax(resultServer, form, '.error-container',true);
+                 } else {
+                     form.submit();
+                 }
+             },"json");
+         } else {
+             handleAjax(resultClient, form, '.error-container');
+         }
+
+         
+
     });
 </script>
