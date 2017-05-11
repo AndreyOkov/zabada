@@ -28,25 +28,25 @@ class Employees extends Model
                 FROM employee em";
         return $this->pdo->executeWithParams($sql);
     }
-
     public function applyCreateEmployee()
     {
         if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['departments'])) {
             $sql = $this->pdo->executeWithParams('INSERT INTO  employee(firstname, lastname, patronymic, gender, salary) VALUES (?, ?, ?, ?, ?)',
-                    [$_POST['firstname'],
+                [$_POST['firstname'],
                     $_POST['lastname'],
                     $_POST['patronymic'],
                     $_POST['gender'],
                     $_POST['salary']]);
-            $this->pdo->executeWithParams("DELETE  FROM employee_department WHERE id_employee = ?", [intval($this->pdo->getLastId())]);
-
+            $employee_id = $this->pdo->getLastId();
+            $this->pdo->executeWithParams("DELETE  FROM employee_department WHERE id_employee = ?", [$employee_id]);
             foreach ($_POST['departments'] as $idDepartment) {
                 $sql = "INSERT INTO employee_department(id_employee, id_department) VALUES (?, ?)";
-                $result = $this->pdo->executeWithParams($sql,[intval($this->pdo->getLastId()),(integer)$idDepartment]);
+                $result = $this->pdo->executeWithParams($sql,[$employee_id,(integer)$idDepartment]);
             }
             return $result;
         }
     }
+
 
     public function createEmployee()
     {

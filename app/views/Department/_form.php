@@ -11,3 +11,10 @@
     <p><input type="hidden" name="id" value="<?= field($formData, 'id') ?> "/></p>
     <p><input type="submit" value="<?php echo($type === 'create' ? 'create' : 'update') ?>"/></p>
 </form>
+
+
+<script>
+
+
+
+</script>
