@@ -39,8 +39,6 @@
         clearValidationMessages(form, errorContainer);
         $.each(errors, function (inputKey, errorMessages) {
             if (errorMessages && errorMessages.length > 0) {
-                console.log("inputKey: "+inputKey+"  errorMessages: " + errorMessages);
-                console.log(form.find(errorContainer));
                 form.find("[name=" + inputKey + "]").siblings(errorContainer)
                     .html("<p class='text-danger'>" + errorMessages[0] + "</p>");
             }
