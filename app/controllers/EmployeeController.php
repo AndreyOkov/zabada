@@ -68,8 +68,9 @@ class EmployeeController extends AppController
         if ( !empty($_POST) ) {
             $values = $_POST["formData"];
             $rules = [
-                "email" => "required|isEmail"
+                "email" => "required|isEmail|unique"
             ];
+
             $result = $this->validate($values, $rules);
             echo json_encode($result);
         } else {
@@ -108,6 +109,16 @@ class EmployeeController extends AppController
                                 if(!filter_var($values[$formKey], FILTER_VALIDATE_EMAIL)){
                                     $errors[$formKey][] = $formKey. " incorrect email";
                                 }
+                                break;
+                            case 'unique':
+                                if($formKey === 'email'){
+                                    $model = new Employees();
+                                    $res = $model->checkUniqueEmail($values[$formKey]);
+                                    if($res !== false){
+                                        $errors[$formKey][] = $formKey. " has not unique value";
+                                    }
+                                }
+                                break;
                         }
                     }
                 }

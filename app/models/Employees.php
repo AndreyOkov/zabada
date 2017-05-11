@@ -128,5 +128,9 @@ class Employees extends Model
         }
         return compact('allDepartments', 'employeeDepartments', 'formData');
     }
-
+    
+    public function checkUniqueEmail($email){
+        $sql = "SELECT * FROM employee WHERE email='$email'";
+        return $this->pdo->executeWithParams($sql)->fetch();
+    }
 }
